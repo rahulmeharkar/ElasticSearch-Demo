@@ -1,0 +1,180 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div>  
+    <h4>Match Query Search&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Query String Search&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bank Avg Balance in Customer Account</h4>
+    <input type="text" id="val" min="3" placeholder="Search Here">
+    <button type="button" onclick="change()"><span class="glyphicon-search"></span>Search</button>
+    &nbsp;&nbsp;
+    <input type="text" id="val2" min="3" placeholder="Search Here">
+    <button type="button" onclick="change2()"><span class="glyphicon-search"></span>Search</button>
+    &nbsp;&nbsp;
+    <label id="totalavg"></label>.00<button type="button" onclick="change3()"> Aggrication Result</button>
+</div>
+<div>
+    <h4>
+        Highlight Search
+    </h4>
+    <input type="text" id="val3" min="3" placeholder="Search Here">
+    <button type="button" onclick="change4()"><span class="glyphicon-search"></span>Search</button>
+</div>
+<div id="onchange"></div>
+<script>
+    function change()
+    {
+        var x = document.getElementById("val").value;
+        if(x != "")
+        {
+            $(document).ready(function () {
+                $("#grid").kendoGrid({
+                    dataSource: {
+                        type: "json",
+                        transport: {
+                            read: "http://localhost:62882/api/search?text=" + x
+                        },
+                        schema: {
+                            model: {
+                                fields: {
+                                    emp_id: { type: "number" },
+                                    emp_name: { type: "string" },
+                                    emp_dept: { type: "string" },
+                                    emp_mobnum: { type: "string" }
+                                }
+                            }
+                        },
+                        pageSize: 20,
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    height: 550,
+                    columns: [{ field: "emp_id", title: "Id", width: "120px" },
+                        { field: "emp_name", title: "Name", width: "120px" },
+                        { field: "emp_dept", title: "Department", width: "120px" },
+                        { field: "emp_mobnum", title: "Mobile Number", width: "120px" }
+                    ]
+                });
+            });
+            
+        }
+        else {
+            alert("Enter Search text");
+        }
+    }
+    function change2() {
+        var x = document.getElementById("val2").value;
+        if (x != "") {
+            $(document).ready(function () {
+                $("#grid").kendoGrid({
+                    dataSource: {
+                        type: "json",
+                        transport: {
+                            read: "http://localhost:62882/api/querystring?txt=" + x
+                        },
+                        schema: {
+                            model: {
+                                fields: {
+                                    emp_id: { type: "number" },
+                                    emp_name: { type: "string" },
+                                    emp_dept: { type: "string" },
+                                    emp_mobnum: { type: "string" }
+                                }
+                            }
+                        },
+                        pageSize: 20,
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    height: 550,
+                    columns: [{ field: "emp_id", title: "Id", width: "120px" },
+                        { field: "emp_name", title: "Name", width: "120px" },
+                        { field: "emp_dept", title: "Department", width: "120px" },
+                        { field: "emp_mobnum", title: "Mobile Number", width: "120px" }
+                    ]
+                });
+            });
+
+        }
+        else {
+            alert("Enter Search text");
+        }
+    }
+    function change3()
+    {
+        $.ajax({
+            url: "http://localhost:62882/api/bank",
+            type: "get",
+            dataType: 'json',
+            success: function (result) {
+                var x = result[0].Value;
+                $("#totalavg").html(x);
+            }
+        });
+    }
+    function change4() {
+        var x = document.getElementById("val3").value;
+        if (x != "") {
+            $(document).ready(function () {
+                $("#grid").kendoGrid({
+                    dataSource: {
+                        type: "json",
+                        transport: {
+                            read: "http://localhost:62882/api/helight?txt=" + x
+                        },
+                        schema: {
+                            model: {
+                                fields: {
+                                    emp_id: { type: "number" },
+                                    emp_name: { type: "string" },
+                                    emp_dept: { type: "string" },
+                                    emp_mobnum: { type: "string" }
+                                }
+                            }
+                        },
+                        pageSize: 20,
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    height: 550,
+                    columns: [{ field: "emp_id", title: "Id", width: "120px" },
+                        { field: "emp_name", title: "Name", width: "120px", template: "#=emp_name#" },
+                        { field: "emp_dept", title: "Department", width: "120px" },
+                        { field: "emp_mobnum", title: "Mobile Number", width: "120px" }
+                    ]
+                });
+            });
+
+        }
+        else {
+            alert("Enter Search text");
+        }
+    }
+
+    //function change5() {
+    //    var y = document.getElementById("val5").value;
+    //    $.ajax({
+    //        url: "http://localhost:62882/api/helight?txt=" + y,
+    //        type: "get",
+    //        dataType: 'json',
+    //        success: function (result) {
+    //            var x = result[0].Value;
+    //            $("#highlight").html(x);
+    //        }
+    //    });
+    //}
+</script>
+<div id="grid"></div>
+@*<div>
+
+    <br />
+    <label id="highlight"></label>
+
+    <h4>
+        Highlight 
+    </h4>
+    <input type="text" id="val5" min="3" placeholder="Search Here">
+    <button type="button" onclick="change5()"><span class="glyphicon-search"></span>Search</button>
+</div>*@

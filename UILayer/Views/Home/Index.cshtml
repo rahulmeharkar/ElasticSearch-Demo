@@ -1,0 +1,143 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@*<!DOCTYPE html>
+<html>
+<head>
+    <base href="https://demos.telerik.com/kendo-ui/grid/editing-popup">
+    <style>
+        html {
+            font-size: 14px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+    </style>
+    <title></title>
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2021.1.119/styles/kendo.bootstrap-v4.min.css" />
+
+    <script src="https://kendo.cdn.telerik.com/2021.1.119/js/jquery.min.js"></script>
+
+
+    <script src="https://kendo.cdn.telerik.com/2021.1.119/js/kendo.all.min.js"></script>
+    <style>
+        .center {
+            right: 0px;
+            width: 300px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>*@
+    <br>
+    <div id="example">
+        <div id="grid"></div>
+
+        <script>
+            $(document).ready(function () {
+                var crudServiceBaseUrl = "http://localhost:62882/",
+                    dataSource = new kendo.data.DataSource({
+                        transport: {
+                            read: {
+                                url: crudServiceBaseUrl + "api/listindex",
+                                dataType: "json"
+                            },
+                            update: {
+                                url: crudServiceBaseUrl + "api/updaterecord",
+                                dataType: "json",
+                                type: "PUT",
+                                complete: function (e) {
+                                    $("#grid").data("kendoGrid").dataSource.read();
+                                    $("#notification").kendoNotification({
+                                        position: {
+                                            top: 30
+                                        },
+                                        autoHideAfter: 3000
+                                    });
+                                    $("#notification").getKendoNotification().show("Succesfully Updated");
+                                }
+                            },
+                            destroy: {
+                                url: crudServiceBaseUrl + "api/deleteindex",
+                                dataType: "json",
+                                type: "DELETE",
+                                complete: function (e) {
+                                    $("#grid").data("kendoGrid").dataSource.read();
+                                    $("#notification").kendoNotification({
+                                        position: {
+                                            top: 30
+                                        },
+                                        autoHideAfter: 3000
+                                    });
+                                    $("#notification").getKendoNotification().show("Succesfully Deleted");
+                                }
+                            },
+                            create: {
+                                url: crudServiceBaseUrl + "api/createindex",
+                                dataType: "json",
+                                type: "POST",
+                                complete: function (e) {
+                                    if (e.status == 200) {
+                                        $("#grid").data("kendoGrid").dataSource.read();
+                                        $("#notification").kendoNotification({
+                                            position: {
+                                                top: 30
+                                            },
+                                            autoHideAfter: 3000
+                                        });
+                                        $("#notification").getKendoNotification().show("Succesfully Created/Inserted Record");
+                                    }
+                                    else
+                                    {
+                                        $("#notification").kendoNotification({
+                                            position: {
+                                                top: 30
+                                            },
+                                            autoHideAfter: 3000
+                                        });
+                                        $("#notification").getKendoNotification().show("Failed ....Check your connection");
+                                    }
+                                }
+                            },
+                            parameterMap: function (options, operation) {
+                                if (operation !== "read" && options.models) {
+                                    return { models: JSON.stringify(options.models) };
+                                }
+
+                            }
+                        },
+
+                        batch: true,
+                        pageSize: 20,
+                        schema: {
+                            model: {
+                                id: "index",
+                                fields: {
+                                    health: { editable: false },
+                                    status: { editable: false },
+                                    index: { editable: false },
+                                    pri: { editable: false },
+                                    rep: { editable: false },
+                                }
+                            }
+                        }
+                    });
+
+                $("#grid").kendoGrid({
+                    dataSource: dataSource,
+                    pageable: true,
+                    height: 550,
+                    columns: [
+                        { field: "health", title: "Health", width: "120px" },
+                        { field: "status", title: "Status", width: "120px" },
+                        { field: "index", title: "Index", width: "120px" },
+                        { field: "pri", title: "Shards", width: "120px" },
+                        { field: "rep", title: "Replicas", width: "120px" },
+                        { command: ["destroy"], title: "&nbsp;", width: "250px" }],
+                    editable: "popup"
+                });
+            });
+        </script>
+    </div>
+
+@*</body>
+</html>*@

@@ -1,0 +1,167 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@*<!DOCTYPE html>
+<html>
+<head>
+    <base href="https://demos.telerik.com/kendo-ui/grid/editing-popup">
+    <style>
+        html {
+            font-size: 14px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+    </style>
+    <title></title>
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2021.1.119/styles/kendo.bootstrap-v4.min.css" />
+
+    <script src="https://kendo.cdn.telerik.com/2021.1.119/js/jquery.min.js"></script>
+
+
+    <script src="https://kendo.cdn.telerik.com/2021.1.119/js/kendo.all.min.js"></script>
+    <style>
+        .center {
+            right: 0px;
+            width: 300px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>*@
+    <br>
+    <div id="example">
+        <div id="grid"></div>
+
+        <script>
+            $(document).ready(function () {
+                var crudServiceBaseUrl = "http://localhost:62882/",
+                    dataSource = new kendo.data.DataSource({
+                        transport: {
+                            read: {
+                                url: crudServiceBaseUrl + "api/listemp",
+                                dataType: "json"
+                            },
+                            update: {
+                                url: crudServiceBaseUrl + "api/updaterecord",
+                                dataType: "json",
+                                type: "PUT",
+                                complete: function (e) {
+                                    if (e.status == 200) {
+                                        $("#grid").data("kendoGrid").dataSource.read();
+                                        $("#notification").kendoNotification({
+                                            position: {
+                                                top: 30
+                                            },
+                                            autoHideAfter: 3000
+                                        });
+                                        $("#notification").getKendoNotification().show("Succesfully Updated Record");
+                                    }
+                                    else {
+                                        $("#notification").kendoNotification({
+                                            position: {
+                                                top: 30
+                                            },
+                                            autoHideAfter: 3000
+                                        });
+                                        $("#notification").getKendoNotification().show("Failed");
+                                    }
+                                }
+                            },
+                            destroy: {
+                                url: crudServiceBaseUrl + "api/deleterecord",
+                                dataType: "json",
+                                type: "DELETE",
+                                complete: function (e) {
+                                    $("#grid").data("kendoGrid").dataSource.read();
+                                    $("#notification").kendoNotification({
+                                        position: {
+                                            top: 30
+                                        },
+                                        autoHideAfter: 3000
+                                    });
+                                    $("#notification").getKendoNotification().show("Succesfully Deleted");
+                                }
+                            },
+                            create: {
+                                url: crudServiceBaseUrl + "api/newemployee",
+                                dataType: "json",
+                                type: "POST",
+                                complete: function (e) {
+                                    if (e.status == 200) {
+                                        $("#grid").data("kendoGrid").dataSource.read();
+                                        $("#notification").kendoNotification({
+                                            position: {
+                                                top: 30
+                                            },
+                                            autoHideAfter: 3000
+                                        });
+                                        $("#notification").getKendoNotification().show("Succesfully Created/Inserted Record");
+                                    }
+                                    else
+                                    {
+                                        $("#notification").kendoNotification({
+                                            position: {
+                                                top: 30
+                                            },
+                                            autoHideAfter: 3000
+                                        });
+                                        $("#notification").getKendoNotification().show("Failed");
+                                    }
+                                }
+                            },
+                            parameterMap: function (options, operation) {
+                                if (operation !== "read" && options.models) {
+                                    return { models: JSON.stringify(options.models) };
+                                }
+
+                            }
+                        },
+
+                        batch: true,
+                        pageSize: 20,
+                        schema: {
+                            model: {
+                                id: "Id",
+                                fields: {
+                                    //Id:{editable:false,nullable:true},
+                                    emp_id: { validation: { required: true } },
+                                    emp_name: {
+                                        validation: {
+                                            required: true,
+                                            namevalidation: function (input) {
+                                                if (input.is("[name='emp_name']") && input.val() != "") {
+                                                    input.attr("data-namevalidation-msg", "Name should be start with capital letter");
+                                                    return /^[A-Z]/.test(input.val());
+                                                }
+
+                                                return true;
+                                            }
+                                        }
+                                    },
+                                    emp_dept: { validation: { required: true } },
+                                    emp_mobnum: { validation: { required: true } },
+                                }
+                            }
+                        }
+                    });
+
+                $("#grid").kendoGrid({
+                    dataSource: dataSource,
+                    pageable: true,
+                    height: 550,
+                    toolbar: ["create","search"],
+                    columns: [
+                        { field: "emp_id", title: "Id", width: "120px" },
+                        { field: "emp_name", title: "Name", width: "120px" },
+                        { field: "emp_dept", title: "Department", width: "120px" },
+                        { field: "emp_mobnum", title: "Mobile Number", width: "120px" },
+                        { command: ["edit", "destroy"], title: "&nbsp;", width: "250px" }],
+                    editable: "popup"
+                });
+            });
+        </script>
+    </div>
+
+@*</body>
+</html>*@
+
